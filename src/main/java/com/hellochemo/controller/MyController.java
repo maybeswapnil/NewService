@@ -13,16 +13,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyController {
 
     @GetMapping(value="/login")
-    public Boolean Login(@RequestParam Integer id, @RequestParam String upass) {
+    public Output Login(@RequestParam Integer id, @RequestParam String upass) {
         MyBeanService myBeanService=null;
             ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MainConfig.class);
             myBeanService = (MyBeanService) applicationContext.getBean("myBeanServiceImpl");
-
             MyBean name = getEmployeeDetails(myBeanService,id);
+            Boolean b = false;
+            Output out = null;
             if(name!=null && name.getUpass().equals(upass)) {
-                return true;
+                b = true;
+                out = new Output(id, name.getName(), "*******", b);
+                return out;
             }
-            return false;
+            out = new Output(id, "user/password was wrong", "*******", false);
+            return out;
+
+
     }
 
     @GetMapping(value="/logon")
